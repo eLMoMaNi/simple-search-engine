@@ -63,7 +63,7 @@ class Indexer:
 
         for doc in self.__docs:
 
-            tokens = self.preprocess(doc["body"])
+            tokens = self.preprocess(doc["body"]+doc["title"])
 
             tokens_count += len(tokens)
 
@@ -94,7 +94,7 @@ class Indexer:
         dictionary = {}   # I will use Inverted Index dictionary
         # I used this structure : {"word": {docId:tf}}
         for doc in self.__docs:
-            tokens = self.preprocess(doc["body"])
+            tokens = self.preprocess(doc["body"]+doc["title"])
             for token in tokens:
 
                 if token in dictionary:
