@@ -54,10 +54,16 @@ class Retriever:
 
         normalized_vector = [i/norm for i in doc_vector]
         return normalized_vector
-        
 
-    def cos_similarity(self):
-        raise NotImplementedError
+    def cos_similarity(self,a,b):
+
+        if len(a) != len(b):
+            raise Exception("a and b must have the same lenght")
+        sum=0
+        for i in len(a):
+            sum+=a[i]*b[i]
+        
+        return sum
 
     def query(self, text, k=100, print_bench=False):
         """make a query from plain text and return top `k` relevant docs.
