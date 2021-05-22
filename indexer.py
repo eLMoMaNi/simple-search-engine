@@ -91,18 +91,20 @@ class Indexer:
 
     def create_schema_file(self, output_filename="schema.json"):
 
-        dictionary = {}   # I will use Inverted Index dictionary
+        schema = {}   # I will use Inverted Index schema
         # I used this structure : {"word": {docId:tf}}
         for doc in self.__docs:
             tokens = self.preprocess(doc["body"]+doc["title"])
             for token in tokens:
 
-                if token in dictionary:
-                    if doc["id"] in dictionary[token]:
-                        dictionary[token][doc["id"]] += 1
+                if token in schema:
+                    if doc["id"] in schema[token]:
+                        schema[token][doc["id"]] += 1
                     else:
-                        dictionary[token][doc["id"]] = 1
+                        schema[token][doc["id"]] = 1
                 else:
-                    dictionary[token] = {doc["id"]: 1}
+                    schema[token] = {doc["id"]: 1}
+        for term in schema:
+            schema[term]["df"]=len(schema[term])
 
-        json.dump(dictionary, open(output_filename, "w"))
+        json.dump(schema, open(output_filename, "w"))
