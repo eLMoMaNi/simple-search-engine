@@ -1,6 +1,5 @@
 import json
 import operator
-import math
 
 import nltk
 from nltk.corpus import stopwords
@@ -107,6 +106,6 @@ class Indexer:
                 else:
                     schema[token] = {doc["id"]: 1}
         for term in schema:
-            schema[term]["idf"]=math.log10(len(self.__docs)/len(schema[term]))
+            schema[term]["idf"]=len(self.__docs)/len(schema[term])
 
         json.dump(schema, open(output_filename, "w"))
