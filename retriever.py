@@ -4,10 +4,10 @@ class Retriever:
     def __init__(self, schema_file) -> None:
         self.__schema_file = schema_file
 
-    def create_query_vector(self, text):
+    def create_query_vector(self, query_list):
         raise NotImplementedError
 
-    def create_doc_vector(self, doc_id, query_text):
+    def create_doc_vector(self, doc_id, query_list):
         raise NotImplementedError
 
     def cos_similarity(self):
