@@ -94,7 +94,7 @@ class Indexer:
         schema = {}   # I will use Inverted Index schema
         # I used this structure : {"word": {docId:tf}}
         for doc in self.__docs:
-            tokens = self.preprocess(doc["body"]+doc["title"])
+            tokens = self.preprocess(doc["body"]+" "+doc["title"])
             for token in tokens:
 
                 if token in schema:
