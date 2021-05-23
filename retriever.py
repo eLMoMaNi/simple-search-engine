@@ -7,7 +7,7 @@ from indexer import Indexer
 class Retriever:
     def __init__(self, schema_file) -> None:
         self.__schema_file = schema_file
-        self.schema = json.load(schema_file)
+        self.schema = json.load(open(schema_file,"r"))
 
     def create_query_vector(self, query_list):
         """creates a normalized query vector using `ltc` weighting.
@@ -61,7 +61,7 @@ class Retriever:
         if len(a) != len(b):
             raise Exception("a and b must have the same lenght")
         sum = 0
-        for i in len(a):
+        for i in range(len(a)):
             sum += a[i]*b[i]
 
         return sum
