@@ -64,7 +64,7 @@ class Indexer:
 
         for doc in self.__docs:
 
-            tokens = self.preprocess(doc["body"]+doc["title"])
+            tokens = self.preprocess(doc["body"]+" "+doc["title"])
 
             tokens_count += len(tokens)
 
