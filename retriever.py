@@ -20,7 +20,6 @@ class Retriever:
         for term in query_list:
             tf = query_list.count(term)
             idf = self.schema[term]["idf"]
-
             # using ltc weighting
             l = 1+math.log10(tf)
             t = math.log10(idf)
@@ -29,7 +28,6 @@ class Retriever:
             query_vector.append(tf_idf)
 
         norm = math.sqrt(sum(i*i for i in query_vector))
-
         normalized_vector = [i/norm for i in query_vector]
         return normalized_vector
 
@@ -54,11 +52,13 @@ class Retriever:
         norm = math.sqrt(sum(i*i for i in doc_vector))
 
         normalized_vector = [i/norm for i in doc_vector]
+
         return normalized_vector
 
     def cos_similarity(self, a, b):
 
         if len(a) != len(b):
+            print(a,b)
             raise Exception("a and b must have the same lenght")
         sum = 0
         for i in range(len(a)):
@@ -79,13 +79,14 @@ class Retriever:
         # preprocess plain text
         tokens = Indexer.preprocess(text)
 
+        tokens = [token for token in tokens if token in self.schema]
         query_vector = self.create_query_vector(tokens)
 
         doc_vectors = {}  # {doc_id:[<vector>]}
 
         for token in tokens:
             for doc in self.schema[token]:
-                if doc in doc_vectors:  # if vector already calculated
+                if doc in doc_vectors or doc=="idf":  # if vector already calculated
                     continue
                 else:
                     doc_vectors[doc] = self.create_doc_vector(doc, tokens)
@@ -101,4 +102,4 @@ class Retriever:
         
         #sort docs by thier scores
         sorted_docs= sorted(doc_scores.items(), key=operator.itemgetter(1))
-        return [i[0] for i in sorted_docs[-30:]]
+        return [i[0] for i in sorted_docs[-k:]]
