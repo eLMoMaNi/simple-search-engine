@@ -1,6 +1,7 @@
 import json
 import math
-from indexer import preprocess
+import operator
+from indexer import Indexer
 
 
 class Retriever:
@@ -49,20 +50,20 @@ class Retriever:
                 doc_vector.append(l)
             else:
                 doc_vector.append(0)
-        
+
         norm = math.sqrt(sum(i*i for i in doc_vector))
 
         normalized_vector = [i/norm for i in doc_vector]
         return normalized_vector
 
-    def cos_similarity(self,a,b):
+    def cos_similarity(self, a, b):
 
         if len(a) != len(b):
             raise Exception("a and b must have the same lenght")
-        sum=0
+        sum = 0
         for i in len(a):
-            sum+=a[i]*b[i]
-        
+            sum += a[i]*b[i]
+
         return sum
 
     def query(self, text, k=100, print_bench=False):
@@ -74,4 +75,30 @@ class Retriever:
             k (int, optional): how many docs to retriev. Defaults to 100.
             print_bench (bool, optional): a flag to print benchmarks. Defaults to False.
         """
-        raise NotImplementedError
+
+        # preprocess plain text
+        tokens = Indexer.preprocess(text)
+
+        query_vector = self.create_query_vector(tokens)
+
+        doc_vectors = {}  # {doc_id:[<vector>]}
+
+        for token in tokens:
+            for doc in self.schema[token]:
+                if doc in doc_vectors:  # if vector already calculated
+                    continue
+                else:
+                    doc_vectors[doc] = self.create_doc_vector(doc, tokens)
+
+        doc_scores={}
+        for doc in doc_vectors:
+            doc_scores[doc] = self.cos_similarity(query_vector,doc_vectors[doc])
+        
+
+        # TODO
+        if print_bench:
+            raise NotImplementedError
+        
+        #sort docs by thier scores
+        sorted_docs= sorted(doc_scores.items(), key=operator.itemgetter(1))
+        return [i[0] for i in sorted_docs[-30:]]
