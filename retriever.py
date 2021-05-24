@@ -9,7 +9,7 @@ class Retriever:
         self.__schema_file = schema_file
         self.schema = json.load(open(schema_file, "r"))
 
-    def create_query_vector(self, query_list):
+    def __create_query_vector(self, query_list):
         """creates a normalized query vector using `ltc` weighting.
 
         Args:
@@ -31,7 +31,7 @@ class Retriever:
         normalized_vector = [i/norm for i in query_vector]
         return normalized_vector
 
-    def create_doc_vector(self, doc_id, query_list):
+    def __create_doc_vector(self, doc_id, query_list):
         """creates a normalized doc vector using `lnc` weighting.
 
         Args:
@@ -55,7 +55,7 @@ class Retriever:
 
         return normalized_vector
 
-    def cos_similarity(self, a, b):
+    def __cos_similarity(self, a, b):
 
         if len(a) != len(b):
             print(a, b)
@@ -82,7 +82,7 @@ class Retriever:
         tokens = Indexer.preprocess(text)
 
         tokens = [token for token in tokens if token in self.schema]
-        query_vector = self.create_query_vector(tokens)
+        query_vector = self.__create_query_vector(tokens)
 
         doc_vectors = {}  # {doc_id:[<vector>]}
 
@@ -91,11 +91,11 @@ class Retriever:
                 if doc in doc_vectors or doc == "idf":  # if vector already calculated
                     continue
                 else:
-                    doc_vectors[doc] = self.create_doc_vector(doc, tokens)
+                    doc_vectors[doc] = self.__create_doc_vector(doc, tokens)
 
         doc_scores = {}
         for doc in doc_vectors:
-            doc_scores[doc] = self.cos_similarity(
+            doc_scores[doc] = self.__cos_similarity(
                 query_vector, doc_vectors[doc])
 
         # sort docs by thier scores
