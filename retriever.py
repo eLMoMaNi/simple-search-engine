@@ -9,7 +9,7 @@ class Retriever:
         self.__schema_file = schema_file
         self.schema = json.load(open(schema_file, "r"))
 
-    def __normalize_vector(self,raw_vector):
+    def __normalize_vector(self, raw_vector):
         norm = math.sqrt(sum(i*i for i in raw_vector))
         normalized_vector = [i/norm for i in raw_vector]
         return normalized_vector
@@ -68,7 +68,34 @@ class Retriever:
 
         return sum
 
-    def query(self, text, k=100, get_bench=False, relevance_docs=[]):
+    def __benchmark(self, top_docs, relevance_docs, decimal_points):
+        tp, fp, fn, tn = 0, 0, 0, 0
+
+        for top_doc in top_docs:
+            if top_doc in relevance_docs:
+                tp += 1
+            else:
+                fp += 1
+
+        for rel_doc in relevance_docs:
+            if rel_doc not in top_docs:
+                fn += 1
+
+        tn = 1400-(tp+fp+fn)  # TODO change this to getter value
+        accuracy = (tp+tn)/(tp+tn+fp+fn)
+        precision = tp/(tp+fp)
+        recall = tp/(tp+fn)
+        f1_score = 0 if precision + \
+            recall == 0 else (2*precision*recall)/(precision+recall)
+
+        return {
+            "accuracy": round(accuracy, decimal_points),
+            "precision": round(precision, decimal_points),
+            "recall": round(recall, decimal_points),
+            "f1_score": round(f1_score, decimal_points)
+        }
+
+    def query(self, text, k=100, get_bench=False, relevance_docs=[], decimal_points=4):
         """make a query from plain text and return top `k` relevant docs.
         `get_bench` returns the benchmarks as dict: `Accuracy, F1 , Precision, Recall`
 
@@ -97,40 +124,22 @@ class Retriever:
 
         doc_scores = {}
         for doc in doc_vectors:
-            doc_scores[doc] = self.__cos_similarity(
-                query_vector, doc_vectors[doc])
+            doc_scores[doc] = \
+                self.__cos_similarity(query_vector, doc_vectors[doc])
 
         # sort docs by thier scores
         sorted_docs = sorted(doc_scores.items(), key=operator.itemgetter(1))
-        ret = [i[0] for i in sorted_docs[-k:]]
+        # get only top `k` docs
+        top_docs = [i[0] for i in sorted_docs[-k:]]
 
         if get_bench:
             if not relevance_docs:
                 raise Exception(
                     "print_bench is true but relevance_docs is empty")
+            return \
+                [
+                    top_docs,
+                    self.__benchmark(top_docs, relevance_docs, decimal_points)
+                ]
 
-            tp, fp, fn, tn = 0, 0, 0, 0
-            for ret_doc in ret:
-                if ret_doc in relevance_docs:
-                    tp += 1
-                else:
-                    fp += 1
-            for rel_doc in relevance_docs:
-                if rel_doc not in ret:
-                    fn += 1
-            # TODO change this to getter value
-            tn = 1400-(tp+fp+fn)
-            accuracy = (tp+tn)/(tp+tn+fp+fn)
-            precision = tp/(tp+fp)
-            recall = tp/(tp+fn)
-            f1_score = 0 if precision + \
-                recall == 0 else (2*precision*recall)/(precision+recall)
-            return [ret, {
-                "accuracy": round(accuracy,4),
-                "precision": round(precision,4),
-                "recall": round(recall,4),
-                "f1_score": round(f1_score,4)
-            }
-            ]
-
-        return ret
+        return [top_docs]
