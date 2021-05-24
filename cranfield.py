@@ -1,6 +1,6 @@
-    """This script uses cranfield dataset to evalute the search engine
-    """
-    
+"""This script uses cranfield dataset to evalute the search engine
+"""
+
 import csv
 from indexer import Indexer
 from retriever import Retriever
