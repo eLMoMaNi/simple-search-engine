@@ -1,6 +1,7 @@
 import json
 import operator
 
+from tqdm import tqdm
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem.porter import *
@@ -62,7 +63,7 @@ class Indexer:
 
         # load documents
 
-        for doc in self.__docs:
+        for doc in tqdm(self.__docs,"printing info",bar_format='{desc:<20}{percentage:3.0f}%|{bar:70}{r_bar}'):
 
             tokens = self.preprocess(doc["body"]+" "+doc["title"])
 
@@ -94,7 +95,7 @@ class Indexer:
 
         schema = {}   # I will use Inverted Index schema
         # I used this structure : {"word": {docId:tf}}
-        for doc in self.__docs:
+        for doc in tqdm(self.__docs,"indexing documents",bar_format='{desc:<20}{percentage:3.0f}%|{bar:70}{r_bar}'):
             tokens = self.preprocess(doc["body"]+" "+doc["title"])
             for token in tokens:
 
