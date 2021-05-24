@@ -5,11 +5,25 @@ from indexer import Indexer
 
 
 class Retriever:
+    """ This class used to search throw index schema and make queries.
+    It calculate cosine similarity for all documents in schema 
+    sequntially for each query.
+    """
+
     def __init__(self, schema_file) -> None:
+
         self.__schema_file = schema_file
         self.schema = json.load(open(schema_file, "r"))
 
     def __normalize_vector(self, raw_vector):
+        """Normalize a vector by converting it to its unit vector.
+
+        Args:
+            raw_vector (list[float]): the vector to be normalized
+
+        Returns:
+            list[float]: the normalized unit vector
+        """
         norm = math.sqrt(sum(i*i for i in raw_vector))
         normalized_vector = [i/norm for i in raw_vector]
         return normalized_vector
@@ -18,7 +32,9 @@ class Retriever:
         """creates a normalized query vector using `ltc` weighting.
 
         Args:
-            query_list (list): the query as list of strings.
+            query_list (list[str]): query terms.
+        Returns:
+            list[float]: normalized query vector
         """
         query_vector = []
 
@@ -36,11 +52,14 @@ class Retriever:
         return normalized_vector
 
     def __create_doc_vector(self, doc_id, query_list):
-        """creates a normalized doc vector using `lnc` weighting.
+        """creates a normalized doc vector using `lnc` weighting for
+        query terms only.
 
         Args:
             doc_id (str): document id
-            query_list (list): the doc as list of strings.
+            query_list (list[str]): query terms.
+        Returns:
+            list[float]: normalized doc vector from query terms
         """
 
         doc_vector = []
@@ -58,6 +77,18 @@ class Retriever:
         return normalized_vector
 
     def __cos_similarity(self, a, b):
+        """calculates the cosine similarity between two vectors
+
+        Args:
+            a (list[float]): the first vector
+            b (list[float]): the second vector
+
+        Raises:
+            Exception: raised when two vectors (list) have different length
+
+        Returns:
+            float: cosine similarity
+        """
 
         if len(a) != len(b):
             print(a, b)
@@ -69,6 +100,16 @@ class Retriever:
         return sum
 
     def __benchmark(self, top_docs, relevance_docs, decimal_points):
+        """calculates the benchmarks `Accuracy, F1 , Precision, Recall`.
+
+        Args:
+            top_docs (list[str]): ids of top retrieved docs
+            relevance_docs (list[str]): the actual relevent docs
+            decimal_points (int): number of decimal points to round to
+
+        Returns:
+            dict[str,float]: values for each benchmark 
+        """
         tp, fp, fn, tn = 0, 0, 0, 0
 
         for top_doc in top_docs:
@@ -105,6 +146,10 @@ class Retriever:
             get_bench (bool, optional): a flag to print benchmarks. Defaults to False.
             relevance_docs (list, optional): relevance docs to calculate benchmarks, must be passed 
             when `get_bench` is true
+        Returns:
+            list[srt]: list of top docs ids
+            list[object]: a list contain list of top docs ids, and a 
+            dictionary for benchmarks
         """
 
         # preprocess plain text
@@ -129,7 +174,7 @@ class Retriever:
 
         # sort docs by thier scores
         sorted_docs = sorted(doc_scores.items(), key=operator.itemgetter(1))
-        # get only top `k` docs
+        # get only top `k` docs ids
         top_docs = [i[0] for i in sorted_docs[-k:]]
 
         if get_bench:
