@@ -9,6 +9,11 @@ class Retriever:
         self.__schema_file = schema_file
         self.schema = json.load(open(schema_file, "r"))
 
+    def __normalize_vector(self,raw_vector):
+        norm = math.sqrt(sum(i*i for i in raw_vector))
+        normalized_vector = [i/norm for i in raw_vector]
+        return normalized_vector
+
     def __create_query_vector(self, query_list):
         """creates a normalized query vector using `ltc` weighting.
 
@@ -27,8 +32,7 @@ class Retriever:
             tf_idf = l*t
             query_vector.append(tf_idf)
 
-        norm = math.sqrt(sum(i*i for i in query_vector))
-        normalized_vector = [i/norm for i in query_vector]
+        normalized_vector = self.__normalize_vector(query_vector)
         return normalized_vector
 
     def __create_doc_vector(self, doc_id, query_list):
@@ -49,9 +53,7 @@ class Retriever:
             else:
                 doc_vector.append(0)
 
-        norm = math.sqrt(sum(i*i for i in doc_vector))
-
-        normalized_vector = [i/norm for i in doc_vector]
+        normalized_vector = self.__normalize_vector(doc_vector)
 
         return normalized_vector
 
