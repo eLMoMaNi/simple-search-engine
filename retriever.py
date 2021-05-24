@@ -175,7 +175,7 @@ class Retriever:
         # sort docs by thier scores
         sorted_docs = sorted(doc_scores.items(), key=operator.itemgetter(1))
         # get only top `k` docs ids
-        top_docs = [i[0] for i in sorted_docs[-k:]]
+        top_docs = [i[0] for i in sorted_docs[-k:][::-1]]
 
         if get_bench:
             if not relevance_docs:
