@@ -1,12 +1,15 @@
+    """This script uses cranfield dataset to evalute the search engine
+    """
+    
 import csv
 from indexer import Indexer
 from retriever import Retriever
 
 if __name__ == "__main__":
-   # indexer = Indexer('./cranfield_data.json')
-   # indexer.create_schema_file()
-   # indexer.print()
-   
+    indexer = Indexer('./cranfield_data.json')
+    indexer.create_schema_file("schema.json")
+    indexer.print()
+
     # create retriever object
     retriever = Retriever("schema.json")
 
