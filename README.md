@@ -72,15 +72,7 @@ relevance_docs gets a list of IDs of the relevent documents to evalute the `Accu
 # How it works
 
 
-<style>
-div.chart {
-  background-color: white;
-  width: auto;
-  overflow: auto;
-}
-</style>
-<div class="chart"><img src="https://raw.githubusercontent.com/eLMoMaNi/simple-search-engine/main/doc/flow_chart.svg"  width=1300>
-</div>
+<img src="./doc/flow_chart.svg"  width=1300>
 
 
 
