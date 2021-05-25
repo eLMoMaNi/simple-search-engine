@@ -81,7 +81,7 @@ relevance_docs gets a list of IDs of the relevent documents to evalute the `Accu
 # How it works
 
 
-<img src="./doc/flow_chart.svg"  width=1300>
+<a href="https://raw.githubusercontent.com/eLMoMaNi/simple-search-engine/main/doc/flow_chart.svg"><img src="./doc/flow_chart.svg"  width=1300></a>
 
 
 
