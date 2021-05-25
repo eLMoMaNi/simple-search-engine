@@ -11,6 +11,15 @@ This repo is a simple study of **Information Retrieval** (IR), it's a simple sea
   * [Creating and using the Retriever](#creating-and-using-the-retriever)
     + [Make a query](#make-a-query)
     + [Getting benchmarks](#getting-benchmarks)
+- [How it works](#how-it-works)
+  * [Crawler](#crawler)
+  * [Indexer](#indexer)
+    + [preprocess](#preprocess)
+    + [schema](#schema)
+  * [Retriever](#retriever)
+    + [create vectors](#create-vectors)
+    + [cosine similarity](#cosine-similarity)
+    + [query](#query)
 - [Credits](#credits)
 
 # Installing 
