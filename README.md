@@ -15,44 +15,58 @@ This repo is a simple study of **Information Retrieval** (IR), it's a simple sea
 
 # Installing 
 
-    git clone https://github.com/eLMoMaNi/simple-search-engine
-	cd ./simple-search-engine
-    pip install -r requirements.txt
-    #copy files to site-packages or create your files in same directory
+```sh
+git clone https://github.com/eLMoMaNi/simple-search-engine
+cd ./simple-search-engine
+pip install -r requirements.txt
+#copy files to site-packages or create your files in same directory
+```
 
 # Usage
 ## Using the Indexer
 ### Creating the Indexer 
 
-    from indexer import Indexer
-    indexer = Indexer('/path/to/cranfield_data.json')
+```python
+from indexer import Indexer
+indexer = Indexer('/path/to/cranfield_data.json')
+```
 Cranfield collection must be converted to a json file.
 ### Creating schema file
 
-    indexer.create_schema_file("schema.json")
+```python
+indexer.create_schema_file("schema.json")
+```
 ### Printing indexed documents statics
 
-    indexer.print()
+```python
+indexer.print()
+```
 this will print some info like this:
 
-    Number of tokens: 140979
-	The number of unique words: 4500
-	The number of words that occur only once: 1488
-	The 10 most frequent words: flow, pressur, number, boundari \...
-
+```dart
+Number of tokens: 140979
+The number of unique words: 4500
+The number of words that occur only once: 1488
+The 10 most frequent words: flow, pressur, number, boundari \...
+```
 ## Creating and using the Retriever
 
-    retriever = Retriever("schema.json")
-
+```python
+retriever = Retriever("schema.json")
+```
 once the Retriever is created. we can use it to seach documents (make queries).
 ### Make a query
 this shows how to get top `100` documents for a query.
 
-    docs, = retriever.query("how to hack NASA using HTML",100)
+```python
+docs, = retriever.query("how to hack NASA using HTML",100)
+```
 ### Getting benchmarks
 
-    docs, = retriever.query("how to hack NASA using HTML",100\
-    ,get_bench=True, relevance_docs=[<doc IDs>])
+```python
+docs, = retriever.query("how to hack NASA using HTML",100\
+                        ,get_bench=True, relevance_docs=[<doc IDs>])
+```
 relevance_docs gets a list of IDs of the relevent documents to evalute the `Accuracy, F1 , Precision and Recall`.
 
 
