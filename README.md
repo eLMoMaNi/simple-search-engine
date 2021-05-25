@@ -70,7 +70,19 @@ docs, = retriever.query("how to hack NASA using HTML",100\
 relevance_docs gets a list of IDs of the relevent documents to evalute the `Accuracy, F1 , Precision and Recall`.
 
 # How it works
-![flow chart](./doc/flow_chart.svg#thumbnail)
+
+
+<style>
+div.chart {
+  background-color: white;
+  width: auto;
+  overflow: auto;
+}
+</style>
+<div class="chart"><img src="https://raw.githubusercontent.com/eLMoMaNi/simple-search-engine/main/doc/flow_chart.svg"  width=1300>
+</div>
+
+
 
 
 ## Crawler
