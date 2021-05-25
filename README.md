@@ -104,14 +104,14 @@ This includes clean the documents and tokenize them as follow:
 
 ### schema
 The schema created by the Indexer has the following structure
-```json
+```javascript
 {
     "token1":
     {
-        "doc1":<tf value>,
-        "doc2":<tf value>,
-        "doc3":<tf value>,
-        "idf":<idf value>
+        "doc1":<tf_value>,
+        "doc2":<tf_value>,
+        "doc3":<tf_value>,
+        "idf":<idf_value>
     },
     "token2":{...}...
 }
